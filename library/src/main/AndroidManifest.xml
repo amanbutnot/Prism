@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <application>
+        <service
+            android:permission="org.github.amanbutnot.prism.permission.DISCOVER_SERVICE"
+            android:name=".PrismService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="org.github.amanbutnot.prism.action.DISCOVERY_ACTION" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
+    </application>
 </manifest>
