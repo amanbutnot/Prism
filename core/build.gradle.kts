@@ -21,8 +21,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.appcompat.v7)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.runner)
+//    implementation(libs.appcompat.v7)
+//    testImplementation(libs.junit)
+//    androidTestImplementation(libs.espresso.core)
+//    androidTestImplementation(libs.runner)
 }
