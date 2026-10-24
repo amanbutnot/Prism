@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.github.amanbutnot.prism.console.data.PrismServiceConnector
 import org.github.amanbutnot.prism.console.data.PrismServiceDiscovery
 import org.github.amanbutnot.prism.console.data.PrismServiceInfo
 import org.github.amanbutnot.prism.console.ui.theme.PrismTheme
@@ -32,6 +34,7 @@ class MainActivity : ComponentActivity() {
             PrismTheme {
                 val discService = PrismServiceDiscovery(packageManager)
                 var discList by remember { mutableStateOf<List<PrismServiceInfo>>(emptyList()) }
+
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -50,7 +53,8 @@ class MainActivity : ComponentActivity() {
                         LazyColumn {
 
                             items(discList) {
-                                Column() {
+                                val connector = PrismServiceConnector(it, applicationContext)
+                                Column(modifier = Modifier.clickable { connector.connect() }) {
                                     Text(it.packageName)
                                     Text(it.serviceClassName)
                                     HorizontalDivider(modifier = Modifier.padding(12.dp))
