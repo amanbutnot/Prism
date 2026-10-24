@@ -6,27 +6,31 @@ import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import org.github.amanbutnot.prism.core.ipc.IPrismService
 
 class PrismServiceConnector(private val info: PrismServiceInfo, private val context: Context) {
     private var isBound = false
-    private var binder: IBinder? = null
+    private var service: IPrismService? = null
+    val prismService: IPrismService?
+        get() = service
     private val compName = ComponentName(info.packageName, info.serviceClassName)
     private val compIntent = Intent().setComponent(compName)
 
 
-    var connectionState: ConnectionState = ConnectionState.DISCONNECTED;
+    private var connectionState: ConnectionState = ConnectionState.DISCONNECTED;
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(
             p0: ComponentName?,
             p1: IBinder?
         ) {
-            binder = p1
+            val aidlService = IPrismService.Stub.asInterface(p1)
+            service = aidlService
             connectionState = ConnectionState.CONNECTED
             println("Service is connected and binder for testing is $p1")
         }
 
         override fun onServiceDisconnected(p0: ComponentName?) {
-            binder = null
+            service = null
             connectionState = ConnectionState.DISCONNECTED
             println("service is diconnected")
         }
@@ -46,7 +50,7 @@ class PrismServiceConnector(private val info: PrismServiceInfo, private val cont
         if (isBound) {
             context.unbindService(serviceConnection)
             connectionState = ConnectionState.DISCONNECTED
-            binder = null
+            service = null
             isBound = false
         }
 
