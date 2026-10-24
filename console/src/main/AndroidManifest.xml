@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <permission android:name="org.github.amanbutnot.prism.permission.DISCOVER_SERVICE" />
+    <uses-permission android:name="org.github.amanbutnot.prism.permission.DISCOVER_SERVICE"/>
     <queries>
         <intent>
             <action android:name="org.github.amanbutnot.prism.action.DISCOVERY_ACTION" />
