@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.github.amanbutnot.prism.console.data.ConnectionState
 import org.github.amanbutnot.prism.console.data.PrismServiceConnector
 import org.github.amanbutnot.prism.console.data.PrismServiceDiscovery
 import org.github.amanbutnot.prism.console.data.PrismServiceInfo
@@ -53,10 +55,19 @@ class MainActivity : ComponentActivity() {
                         LazyColumn {
 
                             items(discList) {
-                                val connector = PrismServiceConnector(it, applicationContext)
-                                Column(modifier = Modifier.clickable { connector.connect() }) {
-                                    Text(it.packageName)
+                                val connector =
+                                    remember(it) { PrismServiceConnector(it, applicationContext) }
+                                val connState = connector.connectionState.collectAsState()
+                                Column(modifier = Modifier.clickable {
+                                    if (connState.value != ConnectionState.CONNECTING) {
+                                        if (connState.value == ConnectionState.CONNECTED) connector.disconnect() else connector.connect()
+                                    }
+                                }) {
+                                    Text(
+                                        it.packageName,
+                                        modifier = Modifier.clickable { println(connector.prismService?.logs) })
                                     Text(it.serviceClassName)
+                                    Text(connState.value.name)
                                     HorizontalDivider(modifier = Modifier.padding(12.dp))
                                 }
                             }
